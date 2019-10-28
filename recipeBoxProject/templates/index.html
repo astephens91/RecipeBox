@@ -1,0 +1,14 @@
+<h1>MY SECRET TREASURE CHEST OF RECIPES</h1>
+
+
+<ul>
+    {% for i in data %}
+        <li><h2><a href="recipes/{{i.id}}/">{{ i.title }}</a>, by <a href="author/{{i.author.id}}">{{ i.author }}</a></h2></li>
+        <br>
+        <h4>Description</h4>
+        <ul>
+            <li>{{ i.description }}</li>
+            <li><strong>Time Required to Make: </strong>{{ i.time }} minutes</li>
+        </ul>
+    {% endfor %}
+</ul>
