@@ -17,13 +17,20 @@ from django.contrib import admin
 from django.urls import path
 from recipeBoxProject import views
 from recipeBoxProject.models import Author, RecipeItem
+from django.conf import settings
+from django.conf.urls.static import static
 
 admin.site.register(Author)
 admin.site.register(RecipeItem)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index),
-    path('recipes/<int:id>/', views.recipe_view),
-    path('author/<int:id>/', views.author_view)
+    path('', views.index, name='homepage'),
+    path('recipes/<int:id>/', views.recipe_view, name='recipepage'),
+    path('author/<int:id>/', views.author_view, name='authorpage'),
+    path('recipeadd/', views.addrecipeview, name='recipeadd'),
+    path('authoradd/', views.addauthorview, name='authoradd')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

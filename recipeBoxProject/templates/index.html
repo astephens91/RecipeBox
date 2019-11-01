@@ -1,4 +1,9 @@
-<h1>MY SECRET TREASURE CHEST OF RECIPES</h1>
+<link rel='stylesheet' href='/static/style.css'>
+
+<h1 class="titles">MY SECRET TREASURE CHEST OF RECIPES</h1>
+<a href="recipeadd/">ADD A RECIPE</a>
+<br>
+<a href="authoradd/">ADD A NEW COOK</a>
 
 
 <ul>
@@ -9,6 +14,7 @@
         <ul>
             <li>{{ i.description }}</li>
             <li><strong>Time Required to Make: </strong>{{ i.time }} minutes</li>
+            <li><em>Created on: {{ i.post_date }}</em></li>
         </ul>
     {% endfor %}
 </ul>
