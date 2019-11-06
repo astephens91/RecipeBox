@@ -1,7 +1,10 @@
 from django.shortcuts import render, HttpResponseRedirect, reverse
-
+from django.contrib.auth import login, logout, authenticate
 from recipeBoxProject.models import RecipeItem, Author
-from recipeBoxProject.forms import AddAuthor, AddRecipeItem
+from recipeBoxProject.forms import AddAuthor, AddRecipeItem, LoginForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.models import User
 
 
 def index(request):
@@ -27,24 +30,30 @@ def author_view(request, id):
     return render(request, author_html, {'data': author, 'recipe': recipe})
 
 
+@login_required
 def addauthorview(request):
     html = 'generic_form.html'
+    if request.user.is_staff:
+        if request.method == 'POST':
+            form = AddAuthor(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                u = User.objects.create_user(
+                    username=data['name'],
+                    password=data['password']
+                )
+                Author.objects.create(
+                    user=u,
+                    name=data['name'],
+                    bio=data['bio'],
+                )
+            return HttpResponseRedirect(reverse('homepage'))
+        form = AddAuthor()
+        return render(request, html, {'form': form})
+    return HttpResponseRedirect('/error')
 
-    if request.method == "POST":
-        form = AddAuthor(request.POST)
 
-        if form.is_valid():
-            data = form.cleaned_data
-            Author.objects.create(
-                name=data['name']
-            )
-        return HttpResponseRedirect(reverse('homepage'))
-
-    form = AddAuthor()
-
-    return render(request, html, {'form': form})
-
-
+@login_required
 def addrecipeview(request):
     html = 'generic_form.html'
 
@@ -56,3 +65,34 @@ def addrecipeview(request):
     form = AddRecipeItem()
 
     return render(request, html, {'form': form})
+
+
+def login_view(request):
+    html = 'generic_form.html'
+
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            user = authenticate(
+                username=data['username'],
+                password=data['password']
+            )
+        if user:
+            login(request, user)
+            return HttpResponseRedirect(request.GET.get('next', reverse('homepage')))
+
+    form = LoginForm()
+
+    return render(request, html, {'form': form})
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('homepage'))
+
+
+def error_view(request):
+    error_html = 'error.html'
+    return render(request, error_html)

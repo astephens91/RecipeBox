@@ -29,7 +29,10 @@ urlpatterns = [
     path('recipes/<int:id>/', views.recipe_view, name='recipepage'),
     path('author/<int:id>/', views.author_view, name='authorpage'),
     path('recipeadd/', views.addrecipeview, name='recipeadd'),
-    path('authoradd/', views.addauthorview, name='authoradd')
+    path('authoradd/', views.addauthorview, name='authoradd'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('error/', views.error_view, name='error')
 ]
 
 if settings.DEBUG:
