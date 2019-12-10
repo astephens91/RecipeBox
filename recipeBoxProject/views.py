@@ -26,8 +26,9 @@ def author_view(request, id):
     author_html = "author.html"
     author = Author.objects.filter(id=id)
     recipe = RecipeItem.objects.filter(author=id)
+    favs = author[0].favorites
 
-    return render(request, author_html, {'data': author, 'recipe': recipe})
+    return render(request, author_html, {'data': author, 'recipe': recipe, 'favorites': favs})
 
 
 @login_required
@@ -67,7 +68,7 @@ def addrecipeview(request):
     return render(request, html, {'form': form})
 
 
-####################Code added by ethan ebel
+#########################################################New code added by ethan ebel
 def editrecipeview(request, recipe_id):
     recipe = RecipeItem.objects.filter(id=recipe_id).first()
 
@@ -94,7 +95,18 @@ def editrecipeview(request, recipe_id):
 
         return render(request, 'generic_form.html', context)
 
-#  
+
+def add_favorite(request, recipe_id, author_id):
+    recipe = RecipeItem.objects.filter(id=recipe_id).first()
+    author = Author.objects.filter(id=request.user.id).first()
+
+
+    author.favorites.add(recipe)
+    author.save()
+
+    return redirect('/author/{}'.format(request.user.id))
+
+##################################################################
 
 
 def login_view(request):

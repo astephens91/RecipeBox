@@ -10,6 +10,7 @@ class Author(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)"""
     name = models.CharField(max_length=50)
     bio = models.TextField(max_length=250, blank=True, null=True)
+    favorites = models.ManyToManyField('RecipeItem', related_name='author_favorites')
 
     def __str__(self):
         return self.name

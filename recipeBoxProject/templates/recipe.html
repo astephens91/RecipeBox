@@ -9,4 +9,5 @@
     <p>{{items.instructions}}</p>
     <br>
     <p><em>Created on: {{ items.post_date }}</em></p>
+    <a method="POST" href="/add-favorite/{{items.id}}/{{user.id}}"><button>Add to favorites</button></a>
 {% endfor %}
