@@ -1,5 +1,5 @@
-<a href="/">HOME</a>
 {% for items in data %}
+<a href="/">HOME</a> <a href="/recipe/edit/{{items.id}}">Edit {{items.title}}</a>
     <h1>{{items.title}} by <a href="/author/{{items.author.id}}/" >{{items.author}}</a></h1>
     <br><br>
     <h4><strong>Time to prepare: </strong> {{items.time}}</h4> 

@@ -1,7 +1,7 @@
-from django.shortcuts import render, HttpResponseRedirect, reverse
+from django.shortcuts import render, HttpResponseRedirect, reverse, redirect
 from django.contrib.auth import login, logout, authenticate
 from recipeBoxProject.models import RecipeItem, Author
-from recipeBoxProject.forms import AddAuthor, AddRecipeItem, LoginForm
+from recipeBoxProject.forms import AddAuthor, AddRecipeItem, LoginForm, EditRecipeItem
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
@@ -65,6 +65,36 @@ def addrecipeview(request):
     form = AddRecipeItem()
 
     return render(request, html, {'form': form})
+
+
+####################Code added by ethan ebel
+def editrecipeview(request, recipe_id):
+    recipe = RecipeItem.objects.filter(id=recipe_id).first()
+
+    if request.method == 'POST':
+        form = EditRecipeItem(request.POST)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            recipe.title = data['title']
+            recipe.description = data['description']
+            recipe.time = data['time']
+            recipe.instructions = data['instructions']
+            recipe.save()
+
+            return redirect('/recipes/{}'.format(recipe.id))
+    else:
+        form = EditRecipeItem({
+            'title': recipe.title,
+            'description': recipe.description,
+            'time': recipe.time,
+            'instructions': recipe.instructions
+            })
+        context = {'form': form}
+
+        return render(request, 'generic_form.html', context)
+
+#  
 
 
 def login_view(request):
