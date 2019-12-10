@@ -31,5 +31,6 @@
             <br>
             <li><em>Created on: {{ i.post_date }}</em></li>
         </ul>
+        <a method="POST" href="/add-favorite/{{i.id}}/{{user.id}}"><button>Add to favorites</button></a>
     {% endfor %}
 </ul>
